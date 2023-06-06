@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>use express-openapi-validator in google cloud function</title>
+    <link href="/2021/10/07/use-express-openapi-validator-in-cloud-function/"/>
+    <url>/2021/10/07/use-express-openapi-validator-in-cloud-function/</url>
+    
+    <content type="html"><![CDATA[<h2 id="How-to-use-express-openapi-validator-in-google-cloud-function"><a href="#How-to-use-express-openapi-validator-in-google-cloud-function" class="headerlink" title="How to use express-openapi-validator in google cloud function"></a>How to use express-openapi-validator in google cloud function</h2><p><code>I will just say the difference between using this on general condition</code></p><p>Set your base url like this. You don’t have to deal with the prefix which is not defined by you .</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">servers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">url:</span> <span class="hljs-string">http://localhost:5001/&lt;prefix&gt;</span><br></code></pre></td></tr></table></figure><p><img src="/images/use-express-openapi-validator-in-cloud-function-1.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>cloud function</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>firebase</tag>
+      
+      <tag>cloud function</tag>
+      
+      <tag>google cloud platform</tag>
+      
+      <tag>nodejs</tag>
+      
+      <tag>express-openapi-validator</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>用 helm 安裝 cockroachdb，儲存用 hostPath</title>
+    <link href="/2021/09/25/install-cockroachdb-with-helm-ch/"/>
+    <url>/2021/09/25/install-cockroachdb-with-helm-ch/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><ul><li>一個 k8s cluster，其中至少要有三臺 worker nodes</li><li>master node 有安裝 helm 3</li></ul><h2 id="新增-cockroachdb-repo"><a href="#新增-cockroachdb-repo" class="headerlink" title="新增 cockroachdb repo"></a>新增 cockroachdb repo</h2><ol><li><code>helm repo add cockroachdb https://charts.cockroachdb.com/</code></li><li><code>helm repo update</code></li></ol><h2 id="設定-values-yaml"><a href="#設定-values-yaml" class="headerlink" title="設定 values.yaml"></a>設定 values.yaml</h2><h3 id="下載-values-yaml"><a href="#下載-values-yaml" class="headerlink" title="下載 values.yaml"></a>下載 <a href="https://raw.githubusercontent.com/cockroachdb/helm-charts/master/cockroachdb/values.yaml">values.yaml</a></h3><h3 id="更新-resource-statefulset-resources"><a href="#更新-resource-statefulset-resources" class="headerlink" title="更新 resource (statefulset.resources)"></a>更新 resource (<code>statefulset.resources</code>)</h3><p>example:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">resources:</span> <br>    <span class="hljs-attr">limits:</span><br>      <span class="hljs-attr">cpu:</span> <span class="hljs-string">&quot;4&quot;</span><br>      <span class="hljs-attr">memory:</span> <span class="hljs-string">8Gi</span><br>    <span class="hljs-attr">requests:</span><br>      <span class="hljs-attr">cpu:</span> <span class="hljs-string">&quot;2&quot;</span><br>      <span class="hljs-attr">memory:</span> <span class="hljs-string">4Gi</span><br></code></pre></td></tr></table></figure><h3 id="根據需求看要不要把啟動-ingress"><a href="#根據需求看要不要把啟動-ingress" class="headerlink" title="根據需求看要不要把啟動 ingress"></a>根據需求看要不要把啟動 ingress</h3><p>example:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">ingress:</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">labels:</span> &#123;&#125;<br>  <span class="hljs-attr">annotations:</span> <br>    <span class="hljs-attr">kubernetes.io/ingress.class:</span> <span class="hljs-string">nginx</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/use-regex:</span> <span class="hljs-string">&quot;true&quot;</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/rewrite-target:</span> <span class="hljs-string">/</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/ssl-redirect:</span> <span class="hljs-string">&quot;true&quot;</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/backend-protocol:</span> <span class="hljs-string">&quot;HTTPS&quot;</span><br>  <span class="hljs-attr">hosts:</span> <br>  <span class="hljs-bullet">-</span> <span class="hljs-string">cockroachdb.example.com</span><br>  <span class="hljs-attr">tls:</span> <br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">hosts:</span> [<span class="hljs-string">cockroachdb.example.com</span>]<br>    <span class="hljs-attr">secretName:</span> <span class="hljs-string">exampleSecret</span><br></code></pre></td></tr></table></figure><h3 id="設定-storage"><a href="#設定-storage" class="headerlink" title="設定 storage"></a>設定 storage</h3><p>example:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">storage:</span><br>  <span class="hljs-attr">hostPath:</span> <span class="hljs-string">&quot;/cockroachdb&quot;</span><br><br>  <span class="hljs-attr">persistentVolume:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure><p>我這邊是使用 hostPath 原因是：<br><code>orchestrations of CockroachDB with Kubernetes use external persistent volumes that are often replicated by the provider. Because CockroachDB already replicates data automatically, this additional layer of replication is unnecessary and can negatively impact performance</code></p><h3 id="設定-tls"><a href="#設定-tls" class="headerlink" title="設定 tls"></a>設定 tls</h3><p>example:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">tls:</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">serviceAccount:</span><br>    <span class="hljs-attr">create:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;cockroachdb&quot;</span><br>  <span class="hljs-attr">certs:</span><br>    <span class="hljs-attr">provided:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">clientRootSecret:</span> <span class="hljs-string">&quot;cockroachdb.client.root&quot;</span><br>    <span class="hljs-attr">nodeSecret:</span> <span class="hljs-string">&quot;cockroachdb.node&quot;</span><br>    <span class="hljs-attr">tlsSecret:</span> <span class="hljs-literal">false</span><br>    <span class="hljs-attr">selfSigner:</span><br>      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure><h2 id="產生憑證"><a href="#產生憑證" class="headerlink" title="產生憑證"></a>產生憑證</h2><ol><li><a href="https://www.cockroachlabs.com/docs/v21.1/install-cockroachdb-linux.html">安裝 cockroachdb binary 來產生憑證</a></li><li><code>mkdir certs my-safe-directory</code></li><li><code>cockroach cert create-ca --certs-dir=certs --ca-key=my-safe-directory/ca.key</code></li><li><code>cockroach cert create-client root --certs-dir=certs --ca-key=my-safe-directory/ca.key</code></li><li><code>kubectl create secret generic cockroachdb.client.root --from-file=certs</code></li><li><code>cockroach cert create-node localhost 127.0.0.1 cockroachdb-public cockroachdb-public.default cockroachdb-public.default.svc.cluster.local *.cockroachdb *.cockroachdb.default *.cockroachdb.default.svc.cluster.local --certs-dir=certs --ca-key=my-safe-directory/ca.key</code></li><li><code>kubectl create secret generic cockroachdb.node --from-file=certs</code></li></ol><h2 id="啟動-cockroachdb"><a href="#啟動-cockroachdb" class="headerlink" title="啟動 cockroachdb"></a>啟動 cockroachdb</h2><p><code>helm install cockroachdb cockroachdb/cockroachdb --values values.yaml</code></p><h2 id="透過連線確認可以執行"><a href="#透過連線確認可以執行" class="headerlink" title="透過連線確認可以執行"></a>透過連線確認可以執行</h2><ol><li><code>kubectl create -f https://raw.githubusercontent.com/cockroachdb/cockroach/master/cloud/kubernetes/bring-your-own-certs/client.yaml</code></li><li><code>kubectl exec -it cockroachdb-client-secure -- ./cockroach sql --certs-dir=/cockroach-certs --host=cockroachdb-public</code></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>kubernetes</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>k8s</tag>
+      
+      <tag>kubernetes</tag>
+      
+      <tag>cockroachdb</tag>
+      
+      <tag>helm</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>use helm install cockroachdb, and store data by setting hostPath</title>
+    <link href="/2021/09/25/install-cockroachdb-with-helm-en/"/>
+    <url>/2021/09/25/install-cockroachdb-with-helm-en/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><ul><li>a k8s cluster with at least 3 worker nodes</li><li>master node has install helm 3 already</li></ul><h2 id="add-cockroachdb-repo"><a href="#add-cockroachdb-repo" class="headerlink" title="add cockroachdb repo"></a>add cockroachdb repo</h2><ol><li><code>helm repo add cockroachdb https://charts.cockroachdb.com/</code></li><li><code>helm repo update</code></li></ol><h2 id="setting-values-yaml"><a href="#setting-values-yaml" class="headerlink" title="setting values.yaml"></a>setting values.yaml</h2><h3 id="download-values-yaml"><a href="#download-values-yaml" class="headerlink" title="download values.yaml"></a>download <a href="https://raw.githubusercontent.com/cockroachdb/helm-charts/master/cockroachdb/values.yaml">values.yaml</a></h3><h3 id="modify-resource-setting-statefulset-resources"><a href="#modify-resource-setting-statefulset-resources" class="headerlink" title="modify resource setting (statefulset.resources)"></a>modify resource setting (<code>statefulset.resources</code>)</h3><p>example:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">resources:</span> <br>    <span class="hljs-attr">limits:</span><br>      <span class="hljs-attr">cpu:</span> <span class="hljs-string">&quot;4&quot;</span><br>      <span class="hljs-attr">memory:</span> <span class="hljs-string">8Gi</span><br>    <span class="hljs-attr">requests:</span><br>      <span class="hljs-attr">cpu:</span> <span class="hljs-string">&quot;2&quot;</span><br>      <span class="hljs-attr">memory:</span> <span class="hljs-string">4Gi</span><br></code></pre></td></tr></table></figure><h3 id="enabled-ingress-as-you-need-it"><a href="#enabled-ingress-as-you-need-it" class="headerlink" title="enabled ingress as you need it"></a>enabled ingress as you need it</h3><p>example:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">ingress:</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">labels:</span> &#123;&#125;<br>  <span class="hljs-attr">annotations:</span> <br>    <span class="hljs-attr">kubernetes.io/ingress.class:</span> <span class="hljs-string">nginx</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/use-regex:</span> <span class="hljs-string">&quot;true&quot;</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/rewrite-target:</span> <span class="hljs-string">/</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/ssl-redirect:</span> <span class="hljs-string">&quot;true&quot;</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/backend-protocol:</span> <span class="hljs-string">&quot;HTTPS&quot;</span><br>  <span class="hljs-attr">hosts:</span> <br>  <span class="hljs-bullet">-</span> <span class="hljs-string">cockroachdb.example.com</span><br>  <span class="hljs-attr">tls:</span> <br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">hosts:</span> [<span class="hljs-string">cockroachdb.example.com</span>]<br>    <span class="hljs-attr">secretName:</span> <span class="hljs-string">exampleSecret</span><br></code></pre></td></tr></table></figure><h3 id="modify-storage-setting"><a href="#modify-storage-setting" class="headerlink" title="modify storage setting"></a>modify storage setting</h3><p>example:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">storage:</span><br>  <span class="hljs-attr">hostPath:</span> <span class="hljs-string">&quot;/cockroachdb&quot;</span><br><br>  <span class="hljs-attr">persistentVolume:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure><p>The reason I use hostPath is because:<br><code>orchestrations of CockroachDB with Kubernetes use external persistent volumes that are often replicated by the provider. Because CockroachDB already replicates data automatically, this additional layer of replication is unnecessary and can negatively impact performance</code></p><h3 id="modify-tls-setting"><a href="#modify-tls-setting" class="headerlink" title="modify tls setting"></a>modify tls setting</h3><p>example:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">tls:</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">serviceAccount:</span><br>    <span class="hljs-attr">create:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;cockroachdb&quot;</span><br>  <span class="hljs-attr">certs:</span><br>    <span class="hljs-attr">provided:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">clientRootSecret:</span> <span class="hljs-string">&quot;cockroachdb.client.root&quot;</span><br>    <span class="hljs-attr">nodeSecret:</span> <span class="hljs-string">&quot;cockroachdb.node&quot;</span><br>    <span class="hljs-attr">tlsSecret:</span> <span class="hljs-literal">false</span><br>    <span class="hljs-attr">selfSigner:</span><br>      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure><h2 id="create-certificates"><a href="#create-certificates" class="headerlink" title="create certificates"></a>create certificates</h2><ol><li><a href="https://www.cockroachlabs.com/docs/v21.1/install-cockroachdb-linux.html">install cockroachdb binary and use it to create certificates</a></li><li><code>mkdir certs my-safe-directory</code></li><li><code>cockroach cert create-ca --certs-dir=certs --ca-key=my-safe-directory/ca.key</code></li><li><code>cockroach cert create-client root --certs-dir=certs --ca-key=my-safe-directory/ca.key</code></li><li><code>kubectl create secret generic cockroachdb.client.root --from-file=certs</code></li><li><code>cockroach cert create-node localhost 127.0.0.1 cockroachdb-public cockroachdb-public.default cockroachdb-public.default.svc.cluster.local *.cockroachdb *.cockroachdb.default *.cockroachdb.default.svc.cluster.local --certs-dir=certs --ca-key=my-safe-directory/ca.key</code></li><li><code>kubectl create secret generic cockroachdb.node --from-file=certs</code></li></ol><h2 id="start-cockroachdb"><a href="#start-cockroachdb" class="headerlink" title="start cockroachdb"></a>start cockroachdb</h2><p><code>helm install cockroachdb cockroachdb/cockroachdb --values values.yaml</code></p><h2 id="Confirm-that-it-is-installed"><a href="#Confirm-that-it-is-installed" class="headerlink" title="Confirm that it is installed"></a>Confirm that it is installed</h2><ol><li><code>kubectl create -f https://raw.githubusercontent.com/cockroachdb/cockroach/master/cloud/kubernetes/bring-your-own-certs/client.yaml</code></li><li><code>kubectl exec -it cockroachdb-client-secure -- ./cockroach sql --certs-dir=/cockroach-certs --host=cockroachdb-public</code></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>kubernetes</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>k8s</tag>
+      
+      <tag>kubernetes</tag>
+      
+      <tag>cockroachdb</tag>
+      
+      <tag>helm</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>firebase cloud functions 部署失敗 - 使用 app-root-path</title>
+    <link href="/2021/09/01/firebase-cloud-function-deploy-fail/"/>
+    <url>/2021/09/01/firebase-cloud-function-deploy-fail/</url>
+    
+    <content type="html"><![CDATA[<h2 id="錯誤與解決方案"><a href="#錯誤與解決方案" class="headerlink" title="錯誤與解決方案"></a>錯誤與解決方案</h2><p>如果在程式碼中有用到 absolute path，如使用 <code>app-root-path</code> 來 require 自己寫的 library，會發現在本機跑並沒有問題<br><img src="/images/firebase-cloud-function-deploy-fail-1.png"><br>但部署到遠端就會失敗<br><img src="/images/firebase-cloud-function-deploy-fail-2.png"><br>會發生這種問題的原因可以看<a href="https://github.com/inxilpro/node-app-root-path/issues/49#issuecomment-803190615">這裡</a>。<br>解決方案是直接定義一個環境變數 <code>APP_ROOT_PATH</code>，在我寫得專案我是這樣設計的：<br><img src="/images/firebase-cloud-function-deploy-fail-3.png"></p><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><ol><li><code>app-root-path</code> 在判斷 path 時如果發現有設環境變數：<code>APP_ROOT_PATH</code>，就會直接使用這個<br><img src="/images/firebase-cloud-function-deploy-fail-4.png"></li><li>在 google cloud functions (firebase 是使用這個)，他會在把你的東西放在 <code>/workspace</code></li><li>同時會有一個環境變數：<code>NODE_ENV</code> 是 <code>production</code></li><li>google cloud functions 在執行時他的 <code>PWD</code> 是在 <code>/workspace</code>，正是我們專案的根目錄<br><img src="/images/firebase-cloud-function-deploy-fail-5.png"></li><li>故可以這樣使用</li></ol><h2 id="最後附上我的程式碼："><a href="#最後附上我的程式碼：" class="headerlink" title="最後附上我的程式碼："></a>最後附上我的程式碼：</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">if</span> (process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENV</span> === <span class="hljs-string">&quot;production&quot;</span>) &#123;<br>process.<span class="hljs-property">env</span>.<span class="hljs-property">APP_ROOT_PATH</span> = process.<span class="hljs-property">env</span>.<span class="hljs-property">PWD</span>;<br>&#125;<br><br><span class="hljs-keyword">const</span> appRoot = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;app-root-path&quot;</span>);<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>cloud function</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>firebase</tag>
+      
+      <tag>cloud function</tag>
+      
+      <tag>google cloud platform</tag>
+      
+      <tag>nodejs</tag>
+      
+      <tag>app-root-path</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>linux kernel compile</title>
+    <link href="/2021/08/27/linux-kernel-compile/"/>
+    <url>/2021/08/27/linux-kernel-compile/</url>
+    
+    <content type="html"><![CDATA[<h2 id="1-下載-kernel-source-code-5-x"><a href="#1-下載-kernel-source-code-5-x" class="headerlink" title="1. 下載 kernel source code(5.x)"></a>1. 下載 kernel source code(5.x)</h2><ul><li><p><a href="http://kernel.cs.nctu.edu.tw/linux/kernel/v5.x/">交大非官方</a></p></li><li><p><a href="https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/">官方</a></p></li><li><p><code>wget &lt;source link&gt;/linux-&lt;version&gt;.tar.gz</code></p></li></ul><h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a>Example:</h3><p><code>wget http://kernel.cs.nctu.edu.tw/linux/kernel/v5.x/linux-5.4.98.tar.gz</code></p><h2 id="2-將檔案移至指定路徑"><a href="#2-將檔案移至指定路徑" class="headerlink" title="2. 將檔案移至指定路徑"></a>2. 將檔案移至指定路徑</h2><ul><li><code>sudo mv linux-&lt;version&gt;.tar.gz /usr/src/</code></li></ul><h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example:"></a>Example:</h3><ul><li><code>sudo mv linux-5.4.98.tar.gz /usr/src/</code></li></ul><h2 id="3-cd-至-x2F-usr-x2F-src-x2F"><a href="#3-cd-至-x2F-usr-x2F-src-x2F" class="headerlink" title="3. cd 至 &#x2F;usr&#x2F;src&#x2F;"></a>3. cd 至 &#x2F;usr&#x2F;src&#x2F;</h2><ul><li><code>cd /usr/src</code></li></ul><h2 id="4-解壓縮檔案"><a href="#4-解壓縮檔案" class="headerlink" title="4. 解壓縮檔案"></a>4. 解壓縮檔案</h2><ul><li><code>sudo tar -xvf linux-&lt;version&gt;.tar.gz</code></li></ul><h3 id="Example-2"><a href="#Example-2" class="headerlink" title="Example:"></a>Example:</h3><ul><li><code>sudo tar -xvf linux-5.4.98.tar.gz</code></li></ul><h2 id="5-cd-至-source-code"><a href="#5-cd-至-source-code" class="headerlink" title="5. cd 至 source code"></a>5. cd 至 source code</h2><ul><li><code>cd linux-&lt;version&gt;/</code></li></ul><h3 id="Example-3"><a href="#Example-3" class="headerlink" title="Example:"></a>Example:</h3><ul><li><code>cd linux-5.4.98/</code></li></ul><h2 id="6-安裝-dependency"><a href="#6-安裝-dependency" class="headerlink" title="6. 安裝 dependency"></a>6. 安裝 dependency</h2><ul><li><code>sudo apt install make libncurses5-dev flex bison libssl-de</code></li></ul><h2 id="7-產生編譯設定檔"><a href="#7-產生編譯設定檔" class="headerlink" title="7. 產生編譯設定檔"></a>7. 產生編譯設定檔</h2><ul><li><code>sudo make localmodconfig</code></li></ul><h2 id="8-kernel-編譯"><a href="#8-kernel-編譯" class="headerlink" title="8. kernel 編譯"></a>8. kernel 編譯</h2><p><code>sudo make all -j &lt;run the number of jobs (commands) simultaneously&gt;</code></p><h3 id="Example-4"><a href="#Example-4" class="headerlink" title="Example:"></a>Example:</h3><ul><li><code>sudo make all -j 6</code></li></ul><h2 id="9-modules-install"><a href="#9-modules-install" class="headerlink" title="9. modules install"></a>9. modules install</h2><ul><li><code>sudo make modules_install</code></li></ul><h2 id="10-kernel-install"><a href="#10-kernel-install" class="headerlink" title="10. kernel install"></a>10. kernel install</h2><ul><li><code>sudo make install</code></li></ul><h2 id="11-update-initramfs"><a href="#11-update-initramfs" class="headerlink" title="11. update initramfs"></a>11. update initramfs</h2><ul><li><code>sudo update-initramfs -u</code></li></ul><h2 id="12-改-grub-設定"><a href="#12-改-grub-設定" class="headerlink" title="12. 改 grub 設定"></a>12. 改 grub 設定</h2><ul><li><code>sudo vim /etc/default/grub</code></li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs conf">#GRUB_TIMEOUT_STYLE=hidden<br>GRUB_TIMEOUT=10`<br></code></pre></td></tr></table></figure><h2 id="13-update-grub"><a href="#13-update-grub" class="headerlink" title="13 update grub"></a>13 update grub</h2><ul><li><code>sudo update-grub</code></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>compile</tag>
+      
+      <tag>linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
